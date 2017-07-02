@@ -39,15 +39,6 @@ app.get('/month/:year/:month', function (req, res) {
 })
 
 // Day
-/*app.get('/day/:year/:month/:day', function (req, res) {
-    var year = req.params.year;
-    var month = req.params.month;
-    var day = req.params.day;
-    var day_obj = scheduleController.day(year, month, day);
-    res.send(JSON.stringify(day_obj));
-})*/
-
-// Day
 app.get('/year/:year', function (req, res) {
     var year = req.params.year;
     var year_obj = scheduleController.year(year);

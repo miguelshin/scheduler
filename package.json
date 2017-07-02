@@ -1,7 +1,7 @@
 {
   "name": "calendar",
   "version": "0.2.6",
-  "description": "A sample Node.js app using Express 4",
+  "description": "Writable scheduler",
   "engines": {
     "node": "6.10.2"
   },
