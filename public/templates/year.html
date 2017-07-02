@@ -1,0 +1,14 @@
+<h1>AGENDA</h1>
+<div> 
+{{yearCtrl.one}}
+    {{year.id}}
+    {{yearCtrl.year.id}}
+	<table>
+		<div ng-repeat="month in yearCtrl.year.months">
+			{{month.value}}
+    		<div ng-bind-html="month.daysHTML"></div>
+    	</div>
+		<input type="button" value="Próximo año" ng-click="yearCtrl.nextYear()" />
+
+	</table>
+</div>
