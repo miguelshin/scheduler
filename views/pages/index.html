@@ -16,6 +16,24 @@
     <script src="js/scheduler.routing.angular.js"></script>
     <script src="js/monthScheduler.app.js"></script>
     <script src="js/monthScheduler.component.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-storage.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDcOyjL7sL3ESHlIWmrTLkLl0cbSYTgBqk",
+        authDomain: "scheduler-ff919.firebaseapp.com",
+        databaseURL: "https://scheduler-ff919.firebaseio.com",
+        projectId: "scheduler-ff919",
+        storageBucket: "scheduler-ff919.appspot.com",
+        messagingSenderId: "241428894999"
+    };
+    firebase.initializeApp(config);
+    </script>
 </head>
 <body ng-app="schedulerApp">
 
