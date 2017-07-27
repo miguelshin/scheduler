@@ -1,4 +1,4 @@
-schedulerApp.controller('YearCtrl', function(schedulerService, $scope, $sce) {
+schedulerApp.controller('YearCtrl', function(schedulerService, $scope) {
 
 	var self = this;
 	this.nextYear = function() {
@@ -21,7 +21,101 @@ function errorHandler() {
 	alert("error!!");
 }
 
-schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $sce, $routeParams) {
+schedulerApp.controller('LoginCtrl', function($scope, $cookies) {
+	var self = this;
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyDcOyjL7sL3ESHlIWmrTLkLl0cbSYTgBqk",
+		authDomain: "scheduler-ff919.firebaseapp.com",
+		databaseURL: "https://scheduler-ff919.firebaseio.com",
+		projectId: "scheduler-ff919",
+		storageBucket: "scheduler-ff919.appspot.com",
+		messagingSenderId: "241428894999"
+	};
+	firebase.initializeApp(config);
+	
+	firebase.auth().onAuthStateChanged(function(user) {
+		debugger;
+		if (user) {
+			// User is signed in.
+			$scope.$apply(function() {
+				self.validatedEmail = user.email;
+			});
+		} else {
+			// No user is signed in.
+		}
+	});
+	debugger;
+	self.loginValidation = loginValidation;
+	self.logout = logout;
+
+	this.$onInit = function() {
+		//alert("XDDD");
+	}
+	/*function writeNewPost(uid, username, picture, title, body) {
+		debugger;
+		// A post entry.
+		var postData = {
+			author: username,
+			uid: uid,
+			body: body,
+			title: title,
+			starCount: 0,
+			authorPic: picture
+		};
+
+		// Get a key for a new Post.
+		var newPostKey = firebase.database().ref().child('posts').push().key;
+
+		// Write the new post's data simultaneously in the posts list and the user's post list.
+		var updates = {};
+		updates['/posts/' + newPostKey] = postData;
+		updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+
+		firebase.database().ref('/user-posts/123/-KpiS6zcStLpEtbTDI1E/').once('value').then(function(snapshot) {
+			debugger;
+			var username = snapshot.val().author;
+			// ...
+			});
+		//return firebase.database().ref().update(updates);
+	}
+	writeNewPost(123, "miguel", "j.jpg", "un titulo", "body");
+
+	var user = {
+		email: "malvarez@desarrolloweb.com",
+		password: "1234"
+		};
+*/
+	/*firebase.auth().createUserWithEmailAndPassword("benitomillan@gmail.com", "123456").catch(function(error) {
+		// Handle Errors here.
+		debugger;
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		// ...
+	});*/
+
+	function loginValidation() {
+		debugger;
+		// TODO: ponerlo en un servicio!!! ->
+		//firebase.auth().signInWithEmailAndPassword(this.email, this.password);
+		firebase.auth().signInWithEmailAndPassword("miguelaob@gmail.com", "123456");
+	}
+
+	function logout() {
+		debugger;
+		firebase.auth().signInWithEmailAndPassword($scope.email, $scope.password).then(function(data){
+			if(data){
+				$scope.validatedEmail = $scope.email;
+				$scope.$apply();
+			}else{
+				console.log("no tengo usuario autenticado");
+			}
+		});
+	}
+
+});
+
+schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routeParams) {
 
 	debugger;
 	var self = this;
@@ -59,35 +153,56 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $sce, $rou
 	}
 	});
 
+	function loadImage() {
 
-
+	}
     function saveImage() {
-	debugger;
-	alert("pepe");
-	debugger;
-      var file = document.getElementById('file').files[0];
+		debugger;
+		storageRef.child('images/' + firebase.auth().currentUser.uid + '/file2').getDownloadURL().then(function(url) {
+			debugger;
+			// `url` is the download URL for 'images/stars.jpg'
 
+			// This can be downloaded directly:
+			var xhr = new XMLHttpRequest();
+			xhr.responseType = 'blob';
+			xhr.onload = function(event) {
+				var blob = xhr.response;
+			};
+			xhr.open('GET', url);
+			xhr.send();
 
-      var metadata = {
-        'contentType': file.type
-      };
+			// Or inserted into an <img> element:
+			var img = document.getElementById('myimg');
+			img.src = url;
+		}).catch(function(error) {
+			// Handle any errors
+		});
 
-      // Push to child path.
-      // [START oncomplete]
-      storageRef.child('images/' + file.name).put(file, metadata).then(function(snapshot) {
-        console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-        console.log(snapshot.metadata);
-        var url = snapshot.downloadURL;
-        console.log('File available at', url);
-        // [START_EXCLUDE]
-        document.getElementById('linkbox').innerHTML = '<a href="' +  url + '">Click For File</a>';
-        // [END_EXCLUDE]
-      }).catch(function(error) {
-        // [START onfailure]
-        console.error('Upload failed:', error);
-        // [END onfailure]
-      });
-      // [END oncomplete]
+      	// set canvasImg image src to dataURL
+		// so it can be saved as an image
+
+		var canvas = document.getElementById('canvasSignature');
+		canvas.toBlob(function(blob){
+			var image = new Image();
+			image.src = blob;
+			// Push to child path.
+			// [START oncomplete]
+			debugger;
+			alert("XDDD");
+			storageRef.child('images/' + firebase.auth().currentUser.uid + '/file2').put(blob).then(function(snapshot) {
+				debugger;
+				console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+				console.log(snapshot.metadata);
+				var url = snapshot.downloadURL;
+				debugger;
+				console.log('File available at', url);
+			}).catch(function(error) {
+				// [START onfailure]
+				console.error('Upload failed:', error);
+				// [END onfailure]
+				// [END oncomplete]
+			});
+		});
     }
 
 	// works out the X, Y position of the click inside the canvas from the X, Y position on the page

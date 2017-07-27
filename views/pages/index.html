@@ -10,6 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.js"></script>
 	<script src="js/scheduler.app.angular.js"></script>
     <script src="js/scheduler.services.angular.js"></script>
     <script src="js/scheduler.controllers.angular.js"></script>
@@ -22,20 +23,34 @@
     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-messaging.js"></script>
     <script src="https://www.gstatic.com/firebasejs/3.8.0/firebase-storage.js"></script>
-    <script>
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyDcOyjL7sL3ESHlIWmrTLkLl0cbSYTgBqk",
-        authDomain: "scheduler-ff919.firebaseapp.com",
-        databaseURL: "https://scheduler-ff919.firebaseio.com",
-        projectId: "scheduler-ff919",
-        storageBucket: "scheduler-ff919.appspot.com",
-        messagingSenderId: "241428894999"
-    };
-    firebase.initializeApp(config);
-    </script>
 </head>
 <body ng-app="schedulerApp">
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+	<form id="signin" class="navbar-form navbar-right" role="form">
+        <div ng-controller="LoginCtrl as loginCtrl">
+             <div>{{ loginCtrl.validatedEmail }}</div>
+            <div ng-show="!loginCtrl.validatedEmail">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="email" type="email" ng-model="loginCtrl.email" class="form-control" name="email" value="" placeholder="Email Address">                                        
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="password" type="password" ng-model="loginCtrl.password" class="form-control" name="password" value="" placeholder="Password">                                        
+                </div>
+                <button type="submit" class="btn btn-primary" ng-click="loginCtrl.loginValidation()">Login</button>
+            </div>
+            <div ng-show="loginCtrl.validatedEmail">
+                <div>{{ loginCtrl.validatedEmail }}</div>
+                <a ng-click="loginCtrl.logout">Salir</a>
+            </div>
+        </div>
+	</form>
+  </div>
+</nav>
 
 <div class="container">
 	<div id="main">

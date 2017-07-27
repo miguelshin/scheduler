@@ -1,1 +1,1 @@
-var monthSchedulerApp = angular.module('monthSchedulerApp', []);
+var monthSchedulerApp = angular.module('monthSchedulerApp', ['ngCookies']);
