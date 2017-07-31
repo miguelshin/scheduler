@@ -36,14 +36,13 @@ schedulerApp.controller('LoginCtrl', function($scope, $cookies) {
 	
 	firebase.auth().onAuthStateChanged(function(user) {
 		debugger;
-		if (user) {
-			// User is signed in.
-			$scope.$apply(function() {
+		$scope.$apply(function() {
+			if (user) {
 				self.validatedEmail = user.email;
-			});
-		} else {
-			// No user is signed in.
-		}
+			} else {
+				self.validatedEmail = null;
+			}
+		});
 	});
 	debugger;
 	self.loginValidation = loginValidation;
@@ -103,16 +102,12 @@ schedulerApp.controller('LoginCtrl', function($scope, $cookies) {
 
 	function logout() {
 		debugger;
-		firebase.auth().signInWithEmailAndPassword($scope.email, $scope.password).then(function(data){
-			if(data){
-				$scope.validatedEmail = $scope.email;
-				$scope.$apply();
-			}else{
-				console.log("no tengo usuario autenticado");
-			}
+		firebase.auth().signOut().then(function() {
+		// Sign-out successful.
+		}, function(error) {
+		// An error happened.
 		});
 	}
-
 });
 
 schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routeParams) {
@@ -123,78 +118,55 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 	self.month = $routeParams.month;
 	self.year = $routeParams.year;
 	self.saveDay = saveDay;
+	self.loadImage = loadImage;
 	self.saveImage = saveImage;
 
 	function saveDay() {
-		alert("XD");
 		var canvas = document.getElementById("canvasSignature");
 		var img = canvas.toDataURL("image/png");
 		document.write('<img src="'+img+'"/>');
-//		var canvas = document.getElementById("canvasSignature");
-//		var dataUrl = canvas.toDataURL('image/jpeg',0.1); // obtenemos la imagen como png
-
-//		dataUrl=dataUrl.replace("image/png",'image/octet-stream'); // sustituimos el tipo por octet
-//		document.location.href =dataUrl; // para forzar al navegador a descargarlo
 	}
 
 	debugger;
  	var auth = firebase.auth();
     var storageRef = firebase.storage().ref();
 
-	auth.onAuthStateChanged(function(user) {
-		debugger;
-	if (user) {
-		console.log('Anonymous user signed-in.', user);
-		document.getElementById('file').disabled = false;
-	} else {
-		console.log('There was no anonymous session. Creating a new anonymous user.');
-		// Sign the user in anonymously since accessing Storage requires the user to be authorized.
-		auth.signInAnonymously();
-	}
-	});
+	self.onInit = loadImage();
 
 	function loadImage() {
-
+		firebase.auth().onAuthStateChanged(function(user) {
+			debugger;
+			var canvas = document.getElementById('canvasSignature');
+			storageRef.child('images/' + user.uid + "/" + self.day + "-" + self.month + "-" + self.year + '.png').getDownloadURL().then(function(url) {
+				debugger;
+				var ctx = canvas.getContext('2d');
+				//Loading of the home test image - img1
+				var img1 = new Image();
+				//drawing of the test image - img1
+				img1.onload = function () {
+					debugger;
+					//draw background image
+					ctx.drawImage(img1, 0, 0);
+					var imgData=ctx.getImageData(10,10,50,50);
+					ctx.putImageData(imgData,10,70);
+				};
+				img1.src = url;
+			}).catch(function(error) {
+				// Handle any errors
+			});
+		});
 	}
     function saveImage() {
 		debugger;
-		storageRef.child('images/' + firebase.auth().currentUser.uid + '/file2').getDownloadURL().then(function(url) {
-			debugger;
-			// `url` is the download URL for 'images/stars.jpg'
-
-			// This can be downloaded directly:
-			var xhr = new XMLHttpRequest();
-			xhr.responseType = 'blob';
-			xhr.onload = function(event) {
-				var blob = xhr.response;
-			};
-			xhr.open('GET', url);
-			xhr.send();
-
-			// Or inserted into an <img> element:
-			var img = document.getElementById('myimg');
-			img.src = url;
-		}).catch(function(error) {
-			// Handle any errors
-		});
-
-      	// set canvasImg image src to dataURL
-		// so it can be saved as an image
-
 		var canvas = document.getElementById('canvasSignature');
 		canvas.toBlob(function(blob){
 			var image = new Image();
 			image.src = blob;
-			// Push to child path.
-			// [START oncomplete]
-			debugger;
-			alert("XDDD");
-			storageRef.child('images/' + firebase.auth().currentUser.uid + '/file2').put(blob).then(function(snapshot) {
+			storageRef.child('images/' + firebase.auth().currentUser.uid + '/' + self.day + "-" + self.month + "-" + self.year + '.png').put(blob).then(function(snapshot) {
 				debugger;
 				console.log('Uploaded', snapshot.totalBytes, 'bytes.');
 				console.log(snapshot.metadata);
 				var url = snapshot.downloadURL;
-				debugger;
 				console.log('File available at', url);
 			}).catch(function(error) {
 				// [START onfailure]
@@ -202,7 +174,7 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 				// [END onfailure]
 				// [END oncomplete]
 			});
-		});
+		}, "image/jpeg", 0.95);
     }
 
 	// works out the X, Y position of the click inside the canvas from the X, Y position on the page
