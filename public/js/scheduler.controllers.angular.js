@@ -142,6 +142,7 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 				var ctx = canvas.getContext('2d');
 				//Loading of the home test image - img1
 				var img1 = new Image();
+				img.setAttribute('crossOrigin', 'anonymous');
 				//drawing of the test image - img1
 				img1.onload = function () {
 					debugger;
