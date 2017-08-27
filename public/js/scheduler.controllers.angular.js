@@ -154,7 +154,7 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 					//ctx.fillStyle = "#FFFFFF";
 					//ctx.putImageData(imgData,10,70);
 					ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
-            		ctx.fillRect(0, 0, 500, 500);
+            		//ctx.fillRect(0, 0, 500, 500);
 				};
 				img1.src = url;
 			}).catch(function(error) {
