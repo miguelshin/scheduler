@@ -148,11 +148,8 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 					debugger;
 					//draw background image
 					ctx.drawImage(img1, 0, 0);
-					//var imgData=ctx.getImageData(10,10,50,50);
-					//ctx.fillStyle = "#FFFFFF";
-					//ctx.putImageData(imgData,10,70);
-					ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
-            		ctx.fillRect(0, 0, 500, 500);
+					var imgData=ctx.getImageData(10,10,50,50);
+					ctx.putImageData(imgData,10,70);
 				};
 				img1.src = url;
 			}).catch(function(error) {
