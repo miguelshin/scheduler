@@ -137,6 +137,13 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 		firebase.auth().onAuthStateChanged(function(user) {
 			debugger;
 			var canvas = document.getElementById('canvasSignature');
+
+			var context = canvas.getContext('2d');
+			context.canvas.width  = window.innerWidth;
+			context.canvas.height = window.innerHeight;
+			context.fillStyle = '#FFFFFF';
+			context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+	
 			storageRef.child('images/' + user.uid + "/" + self.day + "-" + self.month + "-" + self.year + '.png').getDownloadURL().then(function(url) {
 				debugger;
 				var ctx = canvas.getContext('2d');
@@ -147,6 +154,7 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 				img1.onload = function () {
 					debugger;
 					//draw background image
+            		//ctx.fillRect(0, 0, 500, 500);
 					ctx.drawImage(img1, 0, 0);
 //					var imgData=ctx.getImageData(10,10,50,50);
 //					ctx.putImageData(imgData,10,70);
@@ -154,7 +162,6 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 					//ctx.fillStyle = "#FFFFFF";
 					//ctx.putImageData(imgData,10,70);
 					ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
-            		//ctx.fillRect(0, 0, 500, 500);
 				};
 				img1.src = url;
 			}).catch(function(error) {
@@ -165,6 +172,35 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
     function saveImage() {
 		debugger;
 		var canvas = document.getElementById('canvasSignature');
+					  
+		debugger;
+		/*var canvas = document.createElement('canvas');
+		canvas.toBlob(function(blob) {
+			debugger;
+			var image = new Image();
+			console.log("XDDDD");
+			console.log(blob);
+			image.src = blob;
+
+		}, "image/jpeg", 0.75);*/
+
+		debugger;
+/*		var canvas2 = document.createElement('canvas');
+		var image = new Image();
+		image.src = canvas.toDataURL("image/png");
+		storageRef.child('images/' + firebase.auth().currentUser.uid + '/' + self.day + "-" + self.month + "-" + self.year + '.png').putString(image, 'base64', {contentType:'image/png'}).then(function(snapshot){
+			debugger;
+			console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+			console.log(snapshot.metadata);
+			var url = snapshot.downloadURL;
+			console.log('File available at', url);
+		}).catch(function(error) {
+			// [START onfailure]
+			console.error('Upload failed:', error);
+			// [END onfailure]
+			// [END oncomplete]
+		});
+*/
 		canvas.toBlob(function(blob){
 			var image = new Image();
 			image.src = blob;
