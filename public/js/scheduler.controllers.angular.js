@@ -21,95 +21,6 @@ function errorHandler() {
 	alert("error!!");
 }
 
-schedulerApp.controller('LoginCtrl', function($scope, $cookies) {
-	var self = this;
-	// Initialize Firebase
-	var config = {
-		apiKey: "AIzaSyDcOyjL7sL3ESHlIWmrTLkLl0cbSYTgBqk",
-		authDomain: "scheduler-ff919.firebaseapp.com",
-		databaseURL: "https://scheduler-ff919.firebaseio.com",
-		projectId: "scheduler-ff919",
-		storageBucket: "scheduler-ff919.appspot.com",
-		messagingSenderId: "241428894999"
-	};
-	firebase.initializeApp(config);
-	
-	firebase.auth().onAuthStateChanged(function(user) {
-		debugger;
-		$scope.$apply(function() {
-			if (user) {
-				self.validatedEmail = user.email;
-			} else {
-				self.validatedEmail = null;
-			}
-		});
-	});
-	debugger;
-	self.loginValidation = loginValidation;
-	self.logout = logout;
-
-	this.$onInit = function() {
-		//alert("XDDD");
-	}
-	/*function writeNewPost(uid, username, picture, title, body) {
-		debugger;
-		// A post entry.
-		var postData = {
-			author: username,
-			uid: uid,
-			body: body,
-			title: title,
-			starCount: 0,
-			authorPic: picture
-		};
-
-		// Get a key for a new Post.
-		var newPostKey = firebase.database().ref().child('posts').push().key;
-
-		// Write the new post's data simultaneously in the posts list and the user's post list.
-		var updates = {};
-		updates['/posts/' + newPostKey] = postData;
-		updates['/user-posts/' + uid + '/' + newPostKey] = postData;
-
-		firebase.database().ref('/user-posts/123/-KpiS6zcStLpEtbTDI1E/').once('value').then(function(snapshot) {
-			debugger;
-			var username = snapshot.val().author;
-			// ...
-			});
-		//return firebase.database().ref().update(updates);
-	}
-	writeNewPost(123, "miguel", "j.jpg", "un titulo", "body");
-
-	var user = {
-		email: "malvarez@desarrolloweb.com",
-		password: "1234"
-		};
-*/
-	/*firebase.auth().createUserWithEmailAndPassword("benitomillan@gmail.com", "123456").catch(function(error) {
-		// Handle Errors here.
-		debugger;
-		var errorCode = error.code;
-		var errorMessage = error.message;
-		// ...
-	});*/
-
-	function loginValidation() {
-		debugger;
-		// TODO: ponerlo en un servicio!!! ->
-		//firebase.auth().signInWithEmailAndPassword(this.email, this.password);
-		firebase.auth().signInWithEmailAndPassword("miguelaob@gmail.com", "123456");
-	}
-
-	function logout() {
-		debugger;
-		firebase.auth().signOut().then(function() {
-		// Sign-out successful.
-		}, function(error) {
-		// An error happened.
-		});
-	}
-});
-
 schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routeParams) {
 
 	debugger;
@@ -153,14 +64,7 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 				//drawing of the test image - img1
 				img1.onload = function () {
 					debugger;
-					//draw background image
-            		//ctx.fillRect(0, 0, 500, 500);
 					ctx.drawImage(img1, 0, 0);
-//					var imgData=ctx.getImageData(10,10,50,50);
-//					ctx.putImageData(imgData,10,70);
-					//var imgData=ctx.getImageData(10,10,50,50);
-					//ctx.fillStyle = "#FFFFFF";
-					//ctx.putImageData(imgData,10,70);
 					ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
 				};
 				img1.src = url;
@@ -174,33 +78,6 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 		var canvas = document.getElementById('canvasSignature');
 					  
 		debugger;
-		/*var canvas = document.createElement('canvas');
-		canvas.toBlob(function(blob) {
-			debugger;
-			var image = new Image();
-			console.log("XDDDD");
-			console.log(blob);
-			image.src = blob;
-
-		}, "image/jpeg", 0.75);*/
-
-		debugger;
-/*		var canvas2 = document.createElement('canvas');
-		var image = new Image();
-		image.src = canvas.toDataURL("image/png");
-		storageRef.child('images/' + firebase.auth().currentUser.uid + '/' + self.day + "-" + self.month + "-" + self.year + '.png').putString(image, 'base64', {contentType:'image/png'}).then(function(snapshot){
-			debugger;
-			console.log('Uploaded', snapshot.totalBytes, 'bytes.');
-			console.log(snapshot.metadata);
-			var url = snapshot.downloadURL;
-			console.log('File available at', url);
-		}).catch(function(error) {
-			// [START onfailure]
-			console.error('Upload failed:', error);
-			// [END onfailure]
-			// [END oncomplete]
-		});
-*/
 		canvas.toBlob(function(blob){
 			var image = new Image();
 			image.src = blob;
@@ -214,7 +91,6 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 				// [START onfailure]
 				console.error('Upload failed:', error);
 				// [END onfailure]
-				// [END oncomplete]
 			});
 		}, "image/jpeg", 0.95);
     }

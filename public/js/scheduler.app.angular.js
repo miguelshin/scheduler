@@ -1,2 +1,2 @@
 var schedulerApp = angular.module('schedulerApp', 
-	['ngSanitize', 'ngRoute', 'monthSchedulerApp']);
+	['ngSanitize', 'ngRoute', 'loginSchedulerApp', 'monthSchedulerApp']);

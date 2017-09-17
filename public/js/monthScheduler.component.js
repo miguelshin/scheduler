@@ -3,7 +3,7 @@ monthSchedulerApp.component('monthScheduler', {
     bindings: {
         month: '<'
     },
-    controller: "MonthSchedulerCtrl as ctrl"
+    controller: "MonthSchedulerCtrl as monthSchedulerCtrl"
 });
 
 monthSchedulerApp.controller('MonthSchedulerCtrl', MonthSchedulerCtrl);
