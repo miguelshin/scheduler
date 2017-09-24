@@ -1,6 +1,5 @@
 // Configuración de las rutas
 schedulerApp.config(function($routeProvider) {
-debugger;
     $routeProvider
         .when('/', {
             templateUrl : 'templates/year.html',

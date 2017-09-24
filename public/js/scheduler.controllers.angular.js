@@ -14,7 +14,6 @@ schedulerApp.controller('YearCtrl', function(schedulerService, $scope) {
 
 	year = new Date().getFullYear();
 	self.getYear(year);
-	self.one = "pepe";
 });
 
 function errorHandler() {
@@ -22,8 +21,6 @@ function errorHandler() {
 }
 
 schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routeParams) {
-
-	debugger;
 	var self = this;
 	self.day = $routeParams.day;
 	self.month = $routeParams.month;
@@ -31,6 +28,7 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 	self.saveDay = saveDay;
 	self.loadImage = loadImage;
 	self.saveImage = saveImage;
+	self.saveNewSchedulerEntry = saveNewSchedulerEntry;
 
 	function saveDay() {
 		var canvas = document.getElementById("canvasSignature");
@@ -38,15 +36,18 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 		document.write('<img src="'+img+'"/>');
 	}
 
-	debugger;
  	var auth = firebase.auth();
-    var storageRef = firebase.storage().ref();
+	var storageRef = firebase.storage().ref();
+	var databaseRef = firebase.database().ref();
 
 	self.onInit = loadImage();
 
+	function init() {
+		loadImage();
+	}
+
 	function loadImage() {
 		firebase.auth().onAuthStateChanged(function(user) {
-			debugger;
 			var canvas = document.getElementById('canvasSignature');
 
 			var context = canvas.getContext('2d');
@@ -56,33 +57,32 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 			context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 	
 			storageRef.child('images/' + user.uid + "/" + self.day + "-" + self.month + "-" + self.year + '.png').getDownloadURL().then(function(url) {
-				debugger;
 				var ctx = canvas.getContext('2d');
 				//Loading of the home test image - img1
 				var img1 = new Image();
 				img1.setAttribute('crossOrigin', 'anonymous');
 				//drawing of the test image - img1
 				img1.onload = function () {
-					debugger;
 					ctx.drawImage(img1, 0, 0);
 					ctx.fillStyle = "rgba(200, 0, 0, 0.5)";
 				};
 				img1.src = url;
+
+				debugger;
+				saveNewSchedulerEntry(user.uid, user.email, 'body');
 			}).catch(function(error) {
 				// Handle any errors
 			});
 		});
+		initialize();
 	}
     function saveImage() {
-		debugger;
 		var canvas = document.getElementById('canvasSignature');
 					  
-		debugger;
 		canvas.toBlob(function(blob){
 			var image = new Image();
 			image.src = blob;
 			storageRef.child('images/' + firebase.auth().currentUser.uid + '/' + self.day + "-" + self.month + "-" + self.year + '.png').put(blob).then(function(snapshot) {
-				debugger;
 				console.log('Uploaded', snapshot.totalBytes, 'bytes.');
 				console.log(snapshot.metadata);
 				var url = snapshot.downloadURL;
@@ -205,11 +205,10 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 	// draws a line to the x and y coordinates of the mouse event inside
 	// the specified element using the specified context
 	function drawLine(mouseEvent, sigCanvas, context) {
+		var position = getPosition(mouseEvent, sigCanvas);
 
-	 var position = getPosition(mouseEvent, sigCanvas);
-
-	 context.lineTo(position.X, position.Y);
-	 context.stroke();
+		context.lineTo(position.X, position.Y);
+		context.stroke();
 	}
 
 	// draws a line from the last coordiantes in the path to the finishing
@@ -226,8 +225,22 @@ schedulerApp.controller('DayCtrl', function(schedulerService, $scope, $routePara
 	             .unbind("mouseup")
 	             .unbind("mouseout");
 	}
-	debugger;
-    initialize();
+
+
+	function saveNewSchedulerEntry(uid, username, body) {
+		// TODO: esta función debe ser llamada desde la vista con elementos de formulario
+		debugger;
+		// A post entry.
+		var postData = {
+			uid: uid,
+			author: username,
+			body: body
+		};
+
+		databaseRef.child('scheduler/' + firebase.auth().currentUser.uid + '/' +
+						self.day + "-" + self.month + "-" + self.year)
+						.update(postData);
+	}
 
 });
 

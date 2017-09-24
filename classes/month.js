@@ -17,7 +17,6 @@ function Month(id, year) {
     }
 
     this.renderMonthDaysHTML = function() {
-        debugger;       
         html = "";
         html += "<div class='table-responsive'>";
         html += "<table class='table'>";
