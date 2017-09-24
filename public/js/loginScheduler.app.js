@@ -1,0 +1,1 @@
+var loginSchedulerApp = angular.module('loginSchedulerApp', ['ngCookies']);
